@@ -8,7 +8,7 @@ export class CronService {
 
 	constructor(private readonly prisma: PrismaService) {}
 
-	@Cron('0 0 18 * * *')
+	@Cron('0 0 13 * * *')
 	async autoStopSessions() {
 		const now = new Date()
 

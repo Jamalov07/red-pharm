@@ -22,10 +22,10 @@ export class SASService {
 
 			// 1️⃣ Shu session kuni uchun ish oynasi
 			const workStart = new Date(item.date)
-			workStart.setHours(8, 0, 0, 0)
+			workStart.setHours(3, 0, 0, 0)
 
 			const workEnd = new Date(item.date)
-			workEnd.setHours(18, 0, 0, 0)
+			workEnd.setHours(13, 0, 0, 0)
 
 			// 2️⃣ Clamp qilingan start / end
 			const effectiveStart = new Date(Math.max(sessionStart.getTime(), workStart.getTime()))
@@ -93,10 +93,10 @@ export class SASService {
 
 		// Ish oynasi
 		const workStart = new Date(today)
-		workStart.setHours(8, 0, 0, 0)
+		workStart.setHours(3, 0, 0, 0)
 
 		const workEnd = new Date(today)
-		workEnd.setHours(18, 0, 0, 0)
+		workEnd.setHours(13, 0, 0, 0)
 
 		let totalMs = 0
 		let isActive = false
