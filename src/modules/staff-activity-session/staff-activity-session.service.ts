@@ -150,6 +150,7 @@ export class SASService {
 	}
 
 	async getStaffWorkReport(query: SASFindManyRequest) {
+		console.log(query)
 		const sessions = await this.sasRepository.findForReport(query.startDate, query.endDate)
 
 		const dayKeys = getDateKeys(query.startDate, query.endDate)
@@ -165,6 +166,8 @@ export class SASService {
 		>()
 
 		let grandTotalMs = 0
+
+		console.log(sessions.length)
 
 		for (const s of sessions) {
 			const userId = s.user.id

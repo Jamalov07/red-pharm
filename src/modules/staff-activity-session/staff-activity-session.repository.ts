@@ -87,24 +87,32 @@ export class SASRepository {
 		return sas
 	}
 
-	async findForReport(startDate: Date, endDate: Date) {
+	async findForReport(startDate?: Date, endDate?: Date) {
 		const where: any = {
 			deletedAt: null,
 		}
 
-		if (startDate && endDate) {
-			const start = new Date(startDate)
-			start.setHours(0, 0, 0, 0)
+		let start: Date
+		let end: Date
 
-			const end = new Date(endDate)
+		if (startDate) {
+			start = new Date(startDate)
+			start.setHours(0, 0, 0, 0)
+		} else {
+			start = new Date()
+			start.setHours(0, 0, 0, 0)
+		}
+
+		if (endDate) {
+			end = new Date(endDate)
 			end.setHours(0, 0, 0, 0)
 			end.setDate(end.getDate() + 1)
-
-			where.date = {
-				gte: start,
-				lt: end,
-			}
+		} else {
+			end = new Date(start)
+			end.setDate(end.getDate() + 1)
 		}
+
+		where.date = { gte: start, lt: end }
 
 		return this.prisma.staffActivitySessionModel.findMany({
 			where,
