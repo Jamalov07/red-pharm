@@ -88,21 +88,26 @@ export class SASRepository {
 	}
 
 	async findForReport(startDate: Date, endDate: Date) {
-		const start = new Date(startDate)
-		start.setHours(0, 0, 0, 0)
+		const where: any = {
+			deletedAt: null,
+		}
 
-		const end = new Date(endDate)
-		end.setHours(0, 0, 0, 0)
-		end.setDate(end.getDate() + 1)
+		if (startDate && endDate) {
+			const start = new Date(startDate)
+			start.setHours(0, 0, 0, 0)
+
+			const end = new Date(endDate)
+			end.setHours(0, 0, 0, 0)
+			end.setDate(end.getDate() + 1)
+
+			where.date = {
+				gte: start,
+				lt: end,
+			}
+		}
 
 		return this.prisma.staffActivitySessionModel.findMany({
-			where: {
-				date: {
-					gte: start,
-					lt: end,
-				},
-				deletedAt: null,
-			},
+			where,
 			include: {
 				user: {
 					select: {

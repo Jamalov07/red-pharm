@@ -183,10 +183,10 @@ export class SASService {
 
 			// ish oynasi
 			const workStart = new Date(s.date)
-			workStart.setHours(8, 0, 0, 0)
+			workStart.setHours(3, 0, 0, 0)
 
 			const workEnd = new Date(s.date)
-			workEnd.setHours(18, 0, 0, 0)
+			workEnd.setHours(13, 0, 0, 0)
 
 			const start = s.startAt
 			const end = s.endAt ?? new Date()
