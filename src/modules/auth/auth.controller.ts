@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
 import { AuthModifyResponseDto, StaffSignInRequestDto, StaffSignInResponseDto } from './dtos'
 import { CRequest, AuthOptions, RefreshTokenInterceptor, CheckPermissionGuard } from '@common'
 import { StaffFindOneResponseDto } from '../staff'
 
+@ApiBearerAuth('bearer')
 @Controller('auth')
 @ApiTags('Auth')
 @UseGuards(CheckPermissionGuard)

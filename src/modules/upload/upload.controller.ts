@@ -1,11 +1,12 @@
 import { Controller, ParseFilePipe, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common'
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { UploadService } from './upload.service'
 import { UploadQueryDto } from './dtos/request.dto'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { Express } from 'express'
 import { EXCEL_FILE_PIPE } from './helpers'
 
+@ApiBearerAuth('bearer')
 @ApiTags('Upload')
 @Controller('upload')
 export class UploadController {

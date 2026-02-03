@@ -44,7 +44,7 @@ export class ProductMVRepository {
 						createdAt: true,
 						date: true,
 						status: true,
-						client: { select: { categoryId: true, id: true, fullname: true, phone: true, createdAt: true } },
+						client: { select: { address: true, categoryId: true, id: true, fullname: true, phone: true, createdAt: true } },
 					},
 				},
 				arrival: { select: { id: true, date: true, supplier: { select: { id: true, fullname: true, phone: true, createdAt: true } } } },

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
 	ReturningFindManyRequestDto,
 	ReturningFindOneRequestDto,
@@ -15,6 +15,7 @@ import { ReturningService } from './returning.service'
 import { CheckPermissionGuard, CRequest } from '../../common'
 import { Response } from 'express'
 
+@ApiBearerAuth('bearer')
 @ApiTags('Returning')
 @Controller('returning')
 @UseGuards(CheckPermissionGuard)

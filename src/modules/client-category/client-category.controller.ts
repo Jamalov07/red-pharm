@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ClientCategoryService } from './client-category.service'
 import { AuthOptions, CheckPermissionGuard } from '@common'
 import {
@@ -12,6 +12,7 @@ import {
 	ClientCategoryModifyResponseDto,
 } from './dtos'
 
+@ApiBearerAuth('bearer')
 @ApiTags('Client Category')
 @Controller('client-category')
 @UseGuards(CheckPermissionGuard)

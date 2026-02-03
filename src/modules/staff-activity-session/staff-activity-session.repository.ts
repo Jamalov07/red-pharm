@@ -148,6 +148,28 @@ export class SASRepository {
 		return { sessions: sessions }
 	}
 
+	async findByDaysForReport(dates: Date[]) {
+		return this.prisma.staffActivitySessionModel.findMany({
+			where: {
+				deletedAt: null,
+				date: {
+					in: dates,
+				},
+			},
+			include: {
+				user: {
+					select: {
+						id: true,
+						fullname: true,
+					},
+				},
+			},
+			orderBy: {
+				date: 'asc',
+			},
+		})
+	}
+
 	async findAllStaffs() {
 		const staffs = await this.prisma.userModel.findMany({ where: { type: UserTypeEnum.staff, deletedAt: null } })
 

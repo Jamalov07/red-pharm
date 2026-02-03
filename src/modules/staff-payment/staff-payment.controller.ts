@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
 	StaffPaymentFindManyRequestDto,
 	StaffPaymentFindOneRequestDto,
@@ -15,6 +15,7 @@ import { StaffPaymentService } from './staff-payment.service'
 import { AuthOptions, CheckPermissionGuard, CRequest } from '../../common'
 import { Response } from 'express'
 
+@ApiBearerAuth('bearer')
 @ApiTags('Staff Payment')
 @Controller('staff-payment')
 @UseGuards(CheckPermissionGuard)

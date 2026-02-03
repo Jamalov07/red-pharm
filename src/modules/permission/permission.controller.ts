@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { PermissionService } from './permission.service'
 import { AuthOptions, CheckPermissionGuard } from '@common'
 import {
@@ -12,6 +12,7 @@ import {
 	PermissionModifyResponseDto,
 } from './dtos'
 
+@ApiBearerAuth('bearer')
 @ApiTags('Permission')
 @Controller('permission')
 @UseGuards(CheckPermissionGuard)

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, Res, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ProductService } from './product.service'
 import { AuthOptions, CheckPermissionGuard } from '@common'
 import {
@@ -13,6 +13,7 @@ import {
 } from './dtos'
 import { Response } from 'express'
 
+@ApiBearerAuth('bearer')
 @ApiTags('Product')
 @UseGuards(CheckPermissionGuard)
 @Controller('product')

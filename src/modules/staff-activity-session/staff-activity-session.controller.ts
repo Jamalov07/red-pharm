@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AuthOptions, CheckPermissionGuard, CRequest } from '../../common'
 import { SASService } from './staff-activity-session.service'
 import { SASCreateOneRequestDto, SASFindManyRequestDto, SASFindManyResponseDto, SASModifyResponseDto } from './dtos'
 
+@ApiBearerAuth('bearer')
 @ApiTags('Staff Activity Session')
 @Controller('staff-activity-session')
 @UseGuards(CheckPermissionGuard)

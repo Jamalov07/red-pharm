@@ -30,7 +30,7 @@ async function bootstrap() {
 
 	app.enableCors({ origin: '*', methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', allowedHeaders: 'Content-Type, Authorization' })
 
-	const swaggerConfig = new DocumentBuilder().build()
+	const swaggerConfig = new DocumentBuilder().addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT', in: 'header' }, 'bearer').build()
 	const document = SwaggerModule.createDocument(app, swaggerConfig)
 	SwaggerModule.setup('docs', app, document, {})
 

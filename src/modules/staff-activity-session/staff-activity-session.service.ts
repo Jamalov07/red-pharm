@@ -1,9 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { SASRepository } from './staff-activity-session.repository'
 import { SASCreateOneRequest, SASFindManyRequest } from './interfaces'
 import { formatDuration, getDateKeys } from './helpers'
 import { createResponse } from '../../common'
-import { SASCreateMethodEnum } from './enums'
 import { ActivityStopReasonEnum } from '@prisma/client'
 
 @Injectable()
@@ -27,17 +26,18 @@ export class SASService {
 			const workEnd = new Date(item.date)
 			workEnd.setHours(13, 0, 0, 0)
 
-			// 2️⃣ Clamp qilingan start / end
-			const effectiveStart = new Date(Math.max(sessionStart.getTime(), workStart.getTime()))
-
-			const effectiveEnd = new Date(Math.min(sessionEnd.getTime(), workEnd.getTime()))
-
-			// 3️⃣ Agar kesishma yo‘q bo‘lsa → 0
 			let durationMs = 0
-			if (effectiveEnd.getTime() > effectiveStart.getTime()) {
-				durationMs = effectiveEnd.getTime() - effectiveStart.getTime()
-			}
 
+			// 2️⃣ ISH OYNASIDAN BUTUNLAY TASHQARI BO‘LSA → 0
+			if (!(sessionStart >= workEnd || sessionEnd <= workStart)) {
+				const effectiveStart = Math.max(sessionStart.getTime(), workStart.getTime())
+
+				const effectiveEnd = Math.min(sessionEnd.getTime(), workEnd.getTime())
+
+				if (effectiveEnd > effectiveStart) {
+					durationMs = effectiveEnd - effectiveStart
+				}
+			}
 			totalMs += durationMs
 
 			return {
@@ -109,6 +109,10 @@ export class SASService {
 				isActive = true
 			}
 
+			if (start >= workEnd || end <= workStart) {
+				continue
+			}
+
 			const effectiveStart = Math.max(start.getTime(), workStart.getTime())
 			const effectiveEnd = Math.min(end.getTime(), workEnd.getTime())
 
@@ -150,9 +154,18 @@ export class SASService {
 	}
 
 	async getStaffWorkReport(query: SASFindManyRequest) {
-		const { staffs, sessions } = await this.sasRepository.findForReport(query.startDate, query.endDate)
+		const staffs = await this.sasRepository.findAllStaffs()
 
 		const dayKeys = getDateKeys(query.startDate, query.endDate)
+
+		// 05:00 ga normalize qilingan Date[] (DB bilan mos)
+		const dates = dayKeys.map((d) => {
+			const dt = new Date(d)
+			dt.setHours(5, 0, 0, 0)
+			return dt
+		})
+
+		const sessions = await this.sasRepository.findByDaysForReport(dates)
 
 		const workMap = new Map<
 			string,
@@ -164,7 +177,7 @@ export class SASService {
 			}
 		>()
 
-		// 1️⃣ Barcha stafflarni 0 bilan init
+		// 1️⃣ barcha stafflarni 0 bilan init
 		for (const staff of staffs) {
 			workMap.set(staff.id, {
 				userId: staff.id,
@@ -176,120 +189,36 @@ export class SASService {
 
 		let grandTotalMs = 0
 
-		// 2️⃣ Har bir sessionni kunlar bo‘yicha hisoblaymiz
+		// 2️⃣ ENDI FAQAT KUN ICHIDA HISOBLAYMIZ
 		for (const s of sessions) {
 			const row = workMap.get(s.user.id)
 			if (!row) continue
 
+			const dayKey = s.date.toISOString().slice(0, 10)
+
+			const workStart = new Date(s.date)
+			workStart.setHours(3, 0, 0, 0)
+
+			const workEnd = new Date(s.date)
+			workEnd.setHours(13, 0, 0, 0)
+
 			const sessionStart = s.startAt
 			const sessionEnd = s.endAt ?? new Date()
 
-			// session oralig‘idagi kunlar bo‘yicha yuramiz
-			const cursor = new Date(sessionStart)
-			cursor.setHours(0, 0, 0, 0)
-
-			const lastDay = new Date(sessionEnd)
-			lastDay.setHours(0, 0, 0, 0)
-
-			while (cursor <= lastDay) {
-				const dayKey = cursor.toISOString().slice(0, 10)
-
-				// agar bu kun report oralig‘ida bo‘lmasa → skip
-				if (!(dayKey in row.byDay)) {
-					cursor.setDate(cursor.getDate() + 1)
-					continue
-				}
-
-				// ish oynasi (shu kun uchun)
-				const workStart = new Date(cursor)
-				workStart.setHours(3, 0, 0, 0)
-
-				const workEnd = new Date(cursor)
-				workEnd.setHours(13, 0, 0, 0)
-
-				const effectiveStart = Math.max(sessionStart.getTime(), workStart.getTime())
-
-				const effectiveEnd = Math.min(sessionEnd.getTime(), workEnd.getTime())
-
-				if (effectiveEnd > effectiveStart) {
-					const ms = effectiveEnd - effectiveStart
-					row.byDay[dayKey] += ms
-					row.totalMs += ms
-					grandTotalMs += ms
-				}
-
-				cursor.setDate(cursor.getDate() + 1)
+			// ❗ ish oynasidan tashqarida bo‘lsa – SKIP
+			if (sessionStart >= workEnd || sessionEnd <= workStart) {
+				continue
 			}
-		}
 
-		return createResponse({
-			data: {
-				days: dayKeys,
-				rows: Array.from(workMap.values()),
-				grandTotalMs,
-			},
-			success: { messages: ['get report success'] },
-		})
-	}
+			const effectiveStart = Math.max(sessionStart.getTime(), workStart.getTime())
 
-	async getStaffWorkReport2(query: SASFindManyRequest) {
-		const staffs = await this.sasRepository.findAllStaffs()
-		const dayKeys = getDateKeys(query.startDate, query.endDate)
+			const effectiveEnd = Math.min(sessionEnd.getTime(), workEnd.getTime())
 
-		const workMap = new Map<
-			string,
-			{
-				userId: string
-				fullname: string
-				byDay: Record<string, number>
-				totalMs: number
-			}
-		>()
-
-		// 1️⃣ Barcha stafflarni 0 bilan init
-		for (const staff of staffs) {
-			workMap.set(staff.id, {
-				userId: staff.id,
-				fullname: staff.fullname,
-				byDay: Object.fromEntries(dayKeys.map((d) => [d, 0])),
-				totalMs: 0,
-			})
-		}
-
-		let grandTotalMs = 0
-		// 2️⃣ HAR BIR KUN BO‘YICHA HISOB
-		const totalSessions = await Promise.all(
-			dayKeys.map(async (dayKey) => {
-				const { sessions } = await this.sasRepository.findByDayForReport(new Date(dayKey))
-				return { dayKey, sessions }
-			}),
-		)
-
-		for (const { dayKey, sessions } of totalSessions) {
-			// ish oynasi (shu kun uchun)
-			const dayStart = new Date(dayKey)
-			dayStart.setHours(3, 0, 0, 0)
-
-			const dayEnd = new Date(dayKey)
-			dayEnd.setHours(13, 0, 0, 0)
-
-			for (const s of sessions) {
-				const row = workMap.get(s.user.id)
-				if (!row) continue
-
-				const sessionStart = s.startAt
-				const sessionEnd = s.endAt ?? new Date()
-
-				const effectiveStart = Math.max(sessionStart.getTime(), dayStart.getTime())
-
-				const effectiveEnd = Math.min(sessionEnd.getTime(), dayEnd.getTime())
-
-				if (effectiveEnd > effectiveStart) {
-					const ms = effectiveEnd - effectiveStart
-					row.byDay[dayKey] += ms
-					row.totalMs += ms
-					grandTotalMs += ms
-				}
+			if (effectiveEnd > effectiveStart) {
+				const ms = effectiveEnd - effectiveStart
+				row.byDay[dayKey] += ms
+				row.totalMs += ms
+				grandTotalMs += ms
 			}
 		}
 

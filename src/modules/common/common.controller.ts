@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Query, UseGuards } from '@nestjs/common'
 import { CommonService } from './common.service'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AuthOptions, CheckPermissionGuard } from '../../common'
 import { DayCloseGetOneRequestDto, DayCloseGetOneResponseDto, DayCloseModifyResponseDto } from './dtos'
 
+@ApiBearerAuth('bearer')
 @Controller('common')
 @ApiTags('Common')
 @UseGuards(CheckPermissionGuard)

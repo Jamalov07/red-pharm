@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Patch, Post, Query, Req, UseGuards } from '@nestjs/common'
 import { ProductMVService } from './product-mv.service'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
 	arrivalProductMVCreateOneRequestDto,
 	ArrivalProductMVUpdateOneRequestDto,
@@ -17,6 +17,7 @@ import {
 import { AuthOptions, CheckPermissionGuard, CRequest } from '../../common'
 import { ProductModifyResponseDto } from '../product/dtos'
 
+@ApiBearerAuth('bearer')
 @Controller('product-mv')
 @ApiTags('Product Movement')
 @UseGuards(CheckPermissionGuard)

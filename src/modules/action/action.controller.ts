@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Patch, Query, UseGuards } from '@nestjs/common'
 import { ActionService } from './action.service'
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ActionFindManyRequestDto, ActionFindManyResponseDto, ActionFindOneRequestDto, ActionFindOneResponseDto, ActionModifyResponseDto, ActionUpdateOneRequestDto } from './dtos'
 import { CheckPermissionGuard } from '../../common'
 
+@ApiBearerAuth('bearer')
 @Controller('action')
 @ApiTags('Action')
 @UseGuards(CheckPermissionGuard)
