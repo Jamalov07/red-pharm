@@ -63,7 +63,7 @@ export class SellingRepository implements OnModuleInit {
 				},
 				products: {
 					orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
-					select: { createdAt: true, id: true, price: true, count: true, product: { select: { name: true, id: true, createdAt: true } } },
+					select: { createdAt: true, id: true, price: true, count: true, product: { select: { unit: true, name: true, id: true, createdAt: true } } },
 				},
 			},
 			...paginationOptions,
@@ -88,7 +88,7 @@ export class SellingRepository implements OnModuleInit {
 				payment: { select: { total: true, type: true, id: true, card: true, cash: true, other: true, transfer: true, description: true, createdAt: true } },
 				products: {
 					orderBy: [{ createdAt: 'desc' }],
-					select: { createdAt: true, id: true, price: true, count: true, product: { select: { id: true, createdAt: true, name: true } } },
+					select: { createdAt: true, id: true, price: true, count: true, product: { select: { unit: true, id: true, createdAt: true, name: true } } },
 				},
 			},
 		})
@@ -246,7 +246,7 @@ export class SellingRepository implements OnModuleInit {
 				client: { select: { address: true, fullname: true, phone: true, id: true, createdAt: true, telegram: true } },
 				staff: { select: { fullname: true, phone: true, id: true, createdAt: true } },
 				payment: { select: { total: true, id: true, card: true, cash: true, other: true, type: true, transfer: true, description: true, createdAt: true } },
-				products: { select: { createdAt: true, id: true, price: true, count: true, product: { select: { name: true, id: true, createdAt: true } } } },
+				products: { select: { createdAt: true, id: true, price: true, count: true, product: { select: { unit: true, name: true, id: true, createdAt: true } } } },
 			},
 		})
 
@@ -296,7 +296,7 @@ export class SellingRepository implements OnModuleInit {
 				staff: { select: { fullname: true, phone: true, id: true, createdAt: true } },
 				payment: { select: { total: true, id: true, card: true, cash: true, other: true, type: true, transfer: true, description: true, createdAt: true } },
 				products: {
-					select: { createdAt: true, id: true, price: true, count: true, product: { select: { name: true, id: true, createdAt: true } } },
+					select: { createdAt: true, id: true, price: true, count: true, product: { select: { unit: true, name: true, id: true, createdAt: true } } },
 				},
 			},
 		})

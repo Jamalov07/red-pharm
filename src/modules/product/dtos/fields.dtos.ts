@@ -1,8 +1,9 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto, IsDecimalIntOrBigInt } from '../../../common'
 import { ProductOptional, ProductRequired } from '../interfaces'
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
+import { IsEnum, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator'
 import { Decimal } from '@prisma/client/runtime/library'
+import { $Enums, ProductUnitEnum } from '@prisma/client'
 
 export class ProductRequiredDto extends DefaultRequiredFieldsDto implements ProductRequired {
 	@ApiProperty({ type: String })
@@ -22,13 +23,23 @@ export class ProductRequiredDto extends DefaultRequiredFieldsDto implements Prod
 
 	@ApiProperty({ type: Number })
 	@IsNotEmpty()
-	@IsNumber()
-	count: number
+	@IsDecimalIntOrBigInt()
+	@ValidateIf((o) => o.unit === ProductUnitEnum.PIECE)
+	@IsInt()
+	count: Decimal
 
 	@ApiProperty({ type: Number })
 	@IsNotEmpty()
 	@IsNumber()
 	minAmount: number
+
+	@ApiProperty({ enum: ProductUnitEnum })
+	@IsNotEmpty()
+	@IsEnum(ProductUnitEnum)
+	unit: $Enums.ProductUnitEnum
+
+	totalCost: Decimal
+	totalPrice: Decimal
 }
 
 export class ProductOptionalDto extends DefaultOptionalFieldsDto implements ProductOptional {
@@ -49,11 +60,19 @@ export class ProductOptionalDto extends DefaultOptionalFieldsDto implements Prod
 
 	@ApiPropertyOptional({ type: Number })
 	@IsOptional()
-	@IsNumber()
-	count?: number
+	@IsDecimalIntOrBigInt()
+	count?: Decimal
 
 	@ApiPropertyOptional({ type: Number })
 	@IsOptional()
 	@IsNumber()
 	minAmount?: number
+
+	@ApiPropertyOptional({ enum: ProductUnitEnum })
+	@IsOptional()
+	@IsEnum(ProductUnitEnum)
+	unit?: $Enums.ProductUnitEnum
+
+	totalCost?: Decimal
+	totalPrice?: Decimal
 }

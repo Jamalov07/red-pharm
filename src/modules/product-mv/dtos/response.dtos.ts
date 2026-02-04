@@ -4,7 +4,7 @@ import { GlobalModifyResponseDto, GlobalResponseDto, PaginationResponseDto } fro
 import { ProductMVRequiredDto } from './fields.dtos'
 import { Decimal } from '@prisma/client/runtime/library'
 
-export class ProductMVFindOneDataDto extends PickType(ProductMVRequiredDto, ['id', 'createdAt']) implements ProductMVFindOneData {
+export class ProductMVFindOneDataDto extends PickType(ProductMVRequiredDto, ['id', 'createdAt', 'count', 'price']) implements ProductMVFindOneData {
 	@ApiProperty({ type: Date })
 	lastSellingDate?: Date
 

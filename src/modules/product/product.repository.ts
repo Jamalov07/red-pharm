@@ -50,6 +50,7 @@ export class ProductRepository {
 				count: true,
 				createdAt: true,
 				name: true,
+				unit: true,
 				minAmount: true,
 				productMVs: {
 					where: { type: ServiceTypeEnum.selling },
@@ -72,6 +73,7 @@ export class ProductRepository {
 				cost: true,
 				price: true,
 				count: true,
+				unit: true,
 				createdAt: true,
 				name: true,
 				minAmount: true,
@@ -149,6 +151,7 @@ export class ProductRepository {
 				count: body.count,
 				minAmount: body.minAmount,
 				price: body.price,
+				unit: body.unit,
 			},
 		})
 		return product
@@ -163,6 +166,7 @@ export class ProductRepository {
 				count: body.count,
 				minAmount: body.minAmount,
 				price: body.price,
+				unit: body.unit,
 			},
 		})
 

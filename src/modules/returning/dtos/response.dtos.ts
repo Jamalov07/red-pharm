@@ -10,7 +10,7 @@ import {
 import { GlobalModifyResponseDto, GlobalResponseDto, PaginationResponseDto } from '@common'
 import { ReturningRequiredDto } from './fields.dtos'
 
-export class ReturningFindOneDataDto extends PickType(ReturningRequiredDto, ['id', 'date', 'createdAt']) implements ReturningFindOneData {}
+export class ReturningFindOneDataDto extends PickType(ReturningRequiredDto, ['id', 'date', 'createdAt', 'status']) implements ReturningFindOneData {}
 
 export class ReturningFindManyDataDto extends PaginationResponseDto implements ReturningFindManyData {
 	@ApiProperty({ type: ReturningFindOneDataDto, isArray: true })

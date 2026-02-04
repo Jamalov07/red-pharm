@@ -82,7 +82,7 @@ export class ExcelService {
 		})
 
 		sellingList.forEach((item, index) => {
-			const totalSum = item.products.reduce((sum, p) => sum + p.price.toNumber() * p.count, 0)
+			const totalSum = item.products.reduce((sum, p) => sum + p.price.toNumber() * p.count.toNumber(), 0)
 			const paidSum =
 				(item.payment?.cash?.toNumber() ?? 0) + (item.payment?.card?.toNumber() ?? 0) + (item.payment?.transfer?.toNumber() ?? 0) + (item.payment?.other?.toNumber() ?? 0)
 
@@ -191,7 +191,7 @@ export class ExcelService {
 		selling.products.forEach((item, index) => {
 			const count = item.count
 			const price = item.price.toNumber()
-			const sum = count * price
+			const sum = count.toNumber() * price
 			totalSum += sum
 
 			const productName = item.product.name
@@ -267,6 +267,8 @@ export class ExcelService {
 		const arrivalList = await this.prisma.arrivalModel.findMany({
 			where: {
 				deletedAt: null,
+				supplierId: query.supplierId,
+				OR: [{ supplier: { fullname: { contains: query.search, mode: 'insensitive' } } }, { supplier: { phone: { contains: query.search, mode: 'insensitive' } } }],
 				createdAt: {
 					...(startDate && { gte: startDate }),
 					...(endDate && { lte: endDate }),
@@ -332,7 +334,7 @@ export class ExcelService {
 
 		// Ma'lumotlar
 		arrivalList.forEach((item, index) => {
-			const totalSum = item.products.reduce((sum, p) => sum + p.cost.toNumber() * p.count, 0)
+			const totalSum = item.products.reduce((sum, p) => sum + p.cost.toNumber() * p.count.toNumber(), 0)
 			total += totalSum
 
 			const row = worksheet.addRow({
@@ -426,7 +428,7 @@ export class ExcelService {
 
 		// Mahsulotlar
 		arrival.products.forEach((product, index) => {
-			const row = worksheet.addRow([index + 1, product.product.name, product.count, product.cost.toNumber(), product.cost.toNumber() * product.count])
+			const row = worksheet.addRow([index + 1, product.product.name, product.count, product.cost.toNumber(), product.cost.toNumber() * product.count.toNumber()])
 			row.eachCell((cell) => {
 				cell.alignment = { vertical: 'middle', horizontal: 'center' }
 				cell.border = borderAll()
@@ -437,7 +439,7 @@ export class ExcelService {
 		worksheet.addRow([])
 
 		// Итого qatori
-		const totalCost = arrival.products.reduce((sum, p) => sum + p.cost.toNumber() * p.count, 0)
+		const totalCost = arrival.products.reduce((sum, p) => sum + p.cost.toNumber() * p.count.toNumber(), 0)
 		const totalRow = worksheet.addRow(['', 'Итого', '', '', totalCost])
 		totalRow.eachCell((cell) => {
 			cell.font = { bold: true }
@@ -637,7 +639,7 @@ export class ExcelService {
 		returning.products.forEach((item, index) => {
 			const count = item.count
 			const price = item.price
-			const cost = count * price.toNumber()
+			const cost = count.toNumber() * price.toNumber()
 			total += cost
 
 			const row = worksheet.addRow([index + 1, item.product.name, count, price.toNumber(), cost])
@@ -1148,7 +1150,7 @@ export class ExcelService {
 					description: '',
 					cost: p.cost.mul(p.count),
 					price,
-					quantity: p.count,
+					quantity: p.count.toNumber(),
 					name: p.product.name,
 				})
 				totalDebit = totalDebit.plus(price)
@@ -1537,7 +1539,7 @@ export class ExcelService {
 					name: p.product.name,
 					price,
 					cost,
-					quantity: p.count,
+					quantity: p.count.toNumber(),
 				})
 
 				return acc.plus(price)

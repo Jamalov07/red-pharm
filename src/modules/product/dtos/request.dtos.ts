@@ -4,17 +4,17 @@ import { PaginationRequestDto, RequestOtherFieldsDto } from '@common'
 import { ProductOptionalDto, ProductRequiredDto } from './fields.dtos'
 
 export class ProductFindManyRequestDto
-	extends IntersectionType(PickType(ProductOptionalDto, ['name']), PaginationRequestDto, PickType(RequestOtherFieldsDto, ['isDeleted', 'search']))
+	extends IntersectionType(PickType(ProductOptionalDto, ['name', 'unit']), PaginationRequestDto, PickType(RequestOtherFieldsDto, ['isDeleted', 'search']))
 	implements ProductFindManyRequest {}
 
 export class ProductFindOneRequestDto extends IntersectionType(PickType(ProductRequiredDto, ['id'])) implements ProductFindOneRequest {}
 
 export class ProductCreateOneRequestDto
-	extends IntersectionType(PickType(ProductRequiredDto, ['name', 'cost', 'count', 'minAmount', 'price']))
+	extends IntersectionType(PickType(ProductRequiredDto, ['name', 'cost', 'count', 'minAmount', 'price', 'unit']))
 	implements ProductCreateOneRequest {}
 
 export class ProductUpdateOneRequestDto
-	extends IntersectionType(PickType(ProductOptionalDto, ['name', 'deletedAt', 'cost', 'count', 'minAmount', 'price']))
+	extends IntersectionType(PickType(ProductOptionalDto, ['name', 'deletedAt', 'cost', 'count', 'minAmount', 'price', 'unit']))
 	implements ProductUpdateOneRequest {}
 
 export class ProductDeleteOneRequestDto

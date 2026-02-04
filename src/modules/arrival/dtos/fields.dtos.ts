@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto } from '../../../common'
 import { ArrivalOptional, ArrivalRequired } from '../interfaces'
 import { IsDateString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator'
+import { Decimal } from '@prisma/client/runtime/library'
 
 export class ArrivalRequiredDto extends DefaultRequiredFieldsDto implements ArrivalRequired {
 	@ApiProperty({ type: String })
@@ -18,6 +19,9 @@ export class ArrivalRequiredDto extends DefaultRequiredFieldsDto implements Arri
 	@IsNotEmpty()
 	@IsUUID('4')
 	staffId: string
+
+	totalCost: Decimal
+	totalPrice: Decimal
 }
 
 export class ArrivalOptionalDto extends DefaultOptionalFieldsDto implements ArrivalOptional {
@@ -35,4 +39,7 @@ export class ArrivalOptionalDto extends DefaultOptionalFieldsDto implements Arri
 	@IsOptional()
 	@IsUUID('4')
 	staffId?: string
+
+	totalCost?: Decimal
+	totalPrice?: Decimal
 }

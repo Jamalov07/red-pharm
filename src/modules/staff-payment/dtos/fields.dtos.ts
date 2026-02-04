@@ -8,6 +8,11 @@ export class StaffPaymentRequiredDto extends DefaultRequiredFieldsDto implements
 	@ApiProperty({ type: Number })
 	@IsNotEmpty()
 	@IsDecimalIntOrBigInt()
+	total: Decimal
+
+	@ApiProperty({ type: Number })
+	@IsNotEmpty()
+	@IsDecimalIntOrBigInt()
 	sum: Decimal
 
 	@ApiProperty({ type: String })
@@ -27,6 +32,11 @@ export class StaffPaymentRequiredDto extends DefaultRequiredFieldsDto implements
 }
 
 export class StaffPaymentOptionalDto extends DefaultOptionalFieldsDto implements StaffPaymentOptional {
+	@ApiPropertyOptional({ type: Number })
+	@IsOptional()
+	@IsDecimalIntOrBigInt()
+	total?: Decimal
+
 	@ApiPropertyOptional({ type: Number })
 	@IsOptional()
 	@IsDecimalIntOrBigInt()

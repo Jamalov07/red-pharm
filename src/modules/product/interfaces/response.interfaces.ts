@@ -4,7 +4,7 @@ import { Decimal } from '@prisma/client/runtime/library'
 
 export declare interface ProductFindManyData extends PaginationResponse<ProductFindOneData> {}
 
-export declare interface ProductFindOneData extends Pick<ProductRequired, 'id' | 'name' | 'createdAt'>, Pick<ProductOptional, 'price' | 'count' | 'cost'> {
+export declare interface ProductFindOneData extends Pick<ProductRequired, 'id' | 'name' | 'createdAt' | 'unit'>, Pick<ProductOptional, 'price' | 'count' | 'cost'> {
 	lastSellingDate?: Date
 	totalCost?: Decimal
 }

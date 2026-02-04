@@ -31,9 +31,14 @@ export class ReturningPaymentDto implements ReturningPayment {
 	@IsNotEmpty()
 	@IsDecimalIntOrBigInt()
 	fromBalance: Decimal
+
+	@ApiProperty({ type: Number })
+	@IsNotEmpty()
+	@IsDecimalIntOrBigInt()
+	total: Decimal
 }
 
-export class ReturningProductDto extends PickType(ProductMVRequiredDto, ['count', 'price', 'productId']) implements ReturningProduct {}
+export class ReturningProductDto extends PickType(ProductMVRequiredDto, ['count', 'price', 'productId', 'totalPrice']) implements ReturningProduct {}
 
 export class ReturningCreateOneRequestDto extends IntersectionType(PickType(ReturningRequiredDto, ['clientId', 'date'])) implements ReturningCreateOneRequest {
 	@ApiPropertyOptional({ type: ReturningPaymentDto })

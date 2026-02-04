@@ -3,7 +3,7 @@ import { ProductMVOptional, ProductMVRequired } from '../interfaces'
 import { $Enums, ServiceTypeEnum } from '@prisma/client'
 import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto, IsDecimalIntOrBigInt } from '../../../common'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsUUID } from 'class-validator'
+import { IsEnum, IsNotEmpty, IsOptional, IsUUID } from 'class-validator'
 
 export class ProductMVRequiredDto extends DefaultRequiredFieldsDto implements ProductMVRequired {
 	@ApiProperty({ type: String })
@@ -18,8 +18,8 @@ export class ProductMVRequiredDto extends DefaultRequiredFieldsDto implements Pr
 
 	@ApiProperty({ type: Number })
 	@IsNotEmpty()
-	@IsNumber()
-	count: number
+	@IsDecimalIntOrBigInt()
+	count: Decimal
 
 	@ApiProperty({ type: Number })
 	@IsNotEmpty()
@@ -75,8 +75,8 @@ export class ProductMVOptionalDto extends DefaultOptionalFieldsDto implements Pr
 
 	@ApiPropertyOptional({ type: Number })
 	@IsOptional()
-	@IsNumber()
-	count?: number
+	@IsDecimalIntOrBigInt()
+	count?: Decimal
 
 	@ApiPropertyOptional({ type: Number })
 	@IsOptional()

@@ -33,7 +33,7 @@ export class ProductMVRepository {
 				price: true,
 				cost: true,
 				count: true,
-				product: { select: { id: true, name: true, createdAt: true } },
+				product: { select: { unit: true, id: true, name: true, createdAt: true } },
 				totalCost: true,
 				totalPrice: true,
 				type: true,
@@ -372,7 +372,7 @@ export class ProductMVRepository {
 		if (product.selling.status === SellingStatusEnum.accepted) {
 			await this.prisma.productModel.update({
 				where: { id: product.product.id },
-				data: { count: { increment: pr.count - product.count } },
+				data: { count: { increment: pr.count.minus(product.count) } },
 			})
 		}
 
@@ -405,7 +405,7 @@ export class ProductMVRepository {
 			data: {
 				cost: product.cost,
 				price: product.price,
-				count: { increment: product.count - pr.count },
+				count: { increment: product.count.minus(pr.count) },
 			},
 		})
 
@@ -430,7 +430,7 @@ export class ProductMVRepository {
 		if (product.returning.status === SellingStatusEnum.accepted) {
 			await this.prisma.productModel.update({
 				where: { id: product.product.id },
-				data: { count: { increment: product.count - pr.count } },
+				data: { count: { increment: product.count.minus(pr.count) } },
 			})
 		}
 

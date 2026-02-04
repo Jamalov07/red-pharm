@@ -74,6 +74,13 @@ enum ActivityStopReasonEnum {
   unknown  @map("unknown")
 }
 
+enum ProductUnitEnum {
+	PIECE     @map("piece")
+	LITER     @map("liter")     
+	KILOGRAM  @map("kilogram")
+	METER     @map("meter")
+}
+
 model ActionModel {
   id            String            @map("id")             @db.Uuid       @default(dbgenerated("GEN_RANDOM_UUID()"))
   url           String            @map("url")            @db.VarChar()
@@ -323,7 +330,7 @@ model ProductMVModel {
   id         String  @map("id")          @db.Uuid            @default(dbgenerated("GEN_RANDOM_UUID()"))
   price      Decimal @map("price")       @db.Decimal(10, 3)  @default(0)
   cost       Decimal @map("cost")        @db.Decimal(10, 3)  @default(0)
-  count      Int     @map("count")       @db.Integer         @default(1)
+  count      Decimal @map("count")       @db.Decimal(10, 3)  @default(1)
   productId  String  @map("product_id")  @db.Uuid
   totalPrice Decimal @map("total_price") @db.Decimal(10, 3)  @default(0)
   totalCost  Decimal @map("total_cost")  @db.Decimal(10, 3)  @default(0)
@@ -359,8 +366,9 @@ model ProductModel {
   name       String    @map("name")        @db.VarChar()
   cost       Decimal   @map("cost")        @db.Decimal(10, 3)  @default(0)
   price      Decimal   @map("price")       @db.Decimal(10, 3)  @default(0)
+  unit       ProductUnitEnum                                   @default(PIECE)
   minAmount  Int       @map("min_amount")  @db.Integer         @default(1)
-  count      Int       @map("count")       @db.Integer         @default(1)
+  count      Decimal   @map("count")       @db.Decimal(10, 3)  @default(1)
   totalPrice Decimal   @map("total_price") @db.Decimal(10, 3)  @default(0)
   totalCost  Decimal   @map("total_cost")  @db.Decimal(10, 3)  @default(0)
   

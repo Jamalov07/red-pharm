@@ -3,6 +3,7 @@ import { DefaultOptionalFieldsDto, DefaultRequiredFieldsDto } from '../../../com
 import { SellingOptional, SellingRequired } from '../interfaces'
 import { IsBoolean, IsDateString, IsEnum, IsJWT, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUUID } from 'class-validator'
 import { $Enums, SellingStatusEnum, UserTypeEnum } from '@prisma/client'
+import { Decimal } from '@prisma/client/runtime/library'
 
 export class SellingRequiredDto extends DefaultRequiredFieldsDto implements SellingRequired {
 	@ApiProperty({ type: String })
@@ -34,6 +35,9 @@ export class SellingRequiredDto extends DefaultRequiredFieldsDto implements Sell
 	@IsNotEmpty()
 	@IsEnum(SellingStatusEnum)
 	status: $Enums.SellingStatusEnum
+
+	publicId: number
+	totalPrice: Decimal
 }
 
 export class SellingOptionalDto extends DefaultOptionalFieldsDto implements SellingOptional {
@@ -66,4 +70,7 @@ export class SellingOptionalDto extends DefaultOptionalFieldsDto implements Sell
 	@IsOptional()
 	@IsEnum(SellingStatusEnum)
 	status?: $Enums.SellingStatusEnum
+
+	publicId?: number
+	totalPrice?: Decimal
 }
