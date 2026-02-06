@@ -1,6 +1,6 @@
 import { PaginationRequest, RequestOtherFields } from '@common'
 import { ReturningOptional, ReturningRequired } from './fields.interfaces'
-import { ProductMVRequired } from '../../product-mv'
+import { ProductMVOptional, ProductMVRequired } from '../../product-mv'
 import { PaymentModel } from '@prisma/client'
 
 export declare interface ReturningFindManyRequest
@@ -16,7 +16,7 @@ export declare interface ReturningGetOneRequest extends ReturningOptional, Pick<
 
 export declare interface ReturningPayment extends Pick<PaymentModel, 'fromBalance' | 'cash' | 'total'> {}
 
-export declare interface ReturningProduct extends Pick<ProductMVRequired, 'price' | 'count' | 'totalPrice' | 'productId'> {}
+export declare interface ReturningProduct extends Pick<ProductMVRequired, 'price' | 'count' | 'productId'>, Pick<ProductMVOptional, 'totalPrice'> {}
 
 export declare interface ReturningCreateOneRequest extends Pick<ReturningRequired, 'clientId' | 'date'>, Pick<ReturningOptional, 'staffId' | 'status' | 'totalPrice'> {
 	payment?: ReturningPayment

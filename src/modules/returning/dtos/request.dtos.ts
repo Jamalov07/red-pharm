@@ -10,7 +10,7 @@ import {
 } from '../interfaces'
 import { IsDecimalIntOrBigInt, PaginationRequestDto, RequestOtherFieldsDto } from '@common'
 import { ReturningOptionalDto, ReturningRequiredDto } from './fields.dtos'
-import { ProductMVRequiredDto } from '../../product-mv'
+import { ProductMVOptionalDto, ProductMVRequiredDto } from '../../product-mv'
 import { Decimal } from '@prisma/client/runtime/library'
 import { IsArray, IsNotEmpty, IsOptional, IsUUID, ValidateNested } from 'class-validator'
 import { Type } from 'class-transformer'
@@ -38,7 +38,9 @@ export class ReturningPaymentDto implements ReturningPayment {
 	total: Decimal
 }
 
-export class ReturningProductDto extends PickType(ProductMVRequiredDto, ['count', 'price', 'productId', 'totalPrice']) implements ReturningProduct {}
+export class ReturningProductDto
+	extends IntersectionType(PickType(ProductMVRequiredDto, ['count', 'price', 'productId']), PickType(ProductMVOptionalDto, ['totalPrice']))
+	implements ReturningProduct {}
 
 export class ReturningCreateOneRequestDto extends IntersectionType(PickType(ReturningRequiredDto, ['clientId', 'date'])) implements ReturningCreateOneRequest {
 	@ApiPropertyOptional({ type: ReturningPaymentDto })

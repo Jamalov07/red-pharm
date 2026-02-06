@@ -107,4 +107,7 @@ export class ProductMVOptionalDto extends DefaultOptionalFieldsDto implements Pr
 	@IsOptional()
 	@IsEnum(ServiceTypeEnum)
 	type?: $Enums.ServiceTypeEnum
+
+	totalPrice?: Decimal
+	totalCost?: Decimal
 }
