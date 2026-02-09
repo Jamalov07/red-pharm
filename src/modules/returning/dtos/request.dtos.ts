@@ -43,11 +43,11 @@ export class ReturningProductDto
 	implements ReturningProduct {}
 
 export class ReturningCreateOneRequestDto extends IntersectionType(PickType(ReturningRequiredDto, ['clientId', 'date'])) implements ReturningCreateOneRequest {
-	@ApiPropertyOptional({ type: ReturningPaymentDto })
+	@ApiPropertyOptional({ type: PickType(ReturningPaymentDto, ['cash', 'fromBalance']) })
 	@IsOptional()
 	@ValidateNested()
-	@Type(() => ReturningPaymentDto)
-	payment?: ReturningPayment
+	@Type(() => PickType(ReturningPaymentDto, ['cash', 'fromBalance']))
+	payment?: Pick<ReturningPayment, 'cash' | 'fromBalance'>
 
 	@ApiPropertyOptional({ type: ReturningProductDto, isArray: true })
 	@IsOptional()

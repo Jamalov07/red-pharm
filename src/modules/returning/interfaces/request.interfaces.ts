@@ -14,7 +14,7 @@ export declare interface ReturningGetManyRequest extends ReturningOptional, Pagi
 
 export declare interface ReturningGetOneRequest extends ReturningOptional, Pick<RequestOtherFields, 'isDeleted'> {}
 
-export declare interface ReturningPayment extends Pick<PaymentModel, 'fromBalance' | 'cash' | 'total'> {}
+export declare interface ReturningPayment extends Pick<PaymentModel, 'fromBalance' | 'cash'>, Pick<Partial<PaymentModel>, 'total'> {}
 
 export declare interface ReturningProduct extends Pick<ProductMVRequired, 'price' | 'count' | 'productId'>, Pick<ProductMVOptional, 'totalPrice'> {}
 
