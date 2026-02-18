@@ -1,0 +1,27 @@
+name: Deploy Both Instances
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy to buka
+        run: |
+          cd /var/www/buka-vet-pharm
+          git pull origin main
+          pnpm install
+          pnpm run build:swc
+          pm2 restart bukavp
+
+      - name: Deploy to oqqurgon
+        run: |
+          cd /var/www/oqqurgon-vet-pharm
+          git pull origin main
+          pnpm install
+          pnpm run build:swc
+          pm2 restart oqqurgonvp
