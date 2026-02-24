@@ -41,10 +41,10 @@ export class ReturningRepository implements OnModuleInit {
 				createdAt: true,
 				deletedAt: true,
 				date: true,
-				client: { select: { fullname: true, phone: true, id: true, createdAt: true } },
+				client: { select: { category: true, fullname: true, phone: true, id: true, createdAt: true } },
 				staff: { select: { fullname: true, phone: true, id: true, createdAt: true } },
 				payment: { select: { id: true, cash: true, fromBalance: true, total: true } },
-				products: { orderBy: [{ createdAt: 'desc' }], select: { id: true, price: true, count: true, product: { select: { name: true } } } },
+				products: { orderBy: [{ createdAt: 'desc' }], select: { id: true, price: true, count: true, product: { select: { unit: true, name: true } } } },
 			},
 			...paginationOptions,
 		})
@@ -62,10 +62,10 @@ export class ReturningRepository implements OnModuleInit {
 				createdAt: true,
 				deletedAt: true,
 				date: true,
-				client: { select: { fullname: true, phone: true, id: true, createdAt: true } },
+				client: { select: { category: true, fullname: true, phone: true, id: true, createdAt: true } },
 				staff: { select: { fullname: true, phone: true, id: true, createdAt: true } },
 				payment: { select: { total: true, id: true, cash: true, fromBalance: true } },
-				products: { orderBy: [{ createdAt: 'desc' }], select: { id: true, price: true, count: true, product: { select: { name: true } } } },
+				products: { orderBy: [{ createdAt: 'desc' }], select: { id: true, price: true, count: true, product: { select: { unit: true, name: true } } } },
 			},
 		})
 
